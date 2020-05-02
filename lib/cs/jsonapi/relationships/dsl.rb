@@ -39,10 +39,12 @@ module CS
         end
 
         def relationship_rules
-          relationships.each_with_object({}) do |(name, (type, _)), hash|
-            hash[{ data: { relationships: { name => { data: :type } } } }] = proc {
+          relationships.map do |(name, (type, _))|
+            keys = [{ data: { relationships: { name => { data: :type } } } }]
+            block = proc {
               key.failure "is invalid" if key? && value.to_s != type.to_s
             }
+            Dry::Validation::Rule.new(keys: keys, block: block)
           end
         end
 

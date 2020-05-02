@@ -22,13 +22,8 @@ module CS
             end
           end
 
-          dsl.rules.each do |keys, rule_block|
-            rule(keys, &rule_block)
-          end
-
-          dsl.relationship_rules.each do |keys, rule_block|
-            rule(keys, &rule_block)
-          end
+          rules.concat(dsl.rules)
+          rules.concat(dsl.relationship_rules)
 
           rule(data: :type) { key.failure "invalid type" unless value.to_s == dsl.resource_type.to_s }
         end
