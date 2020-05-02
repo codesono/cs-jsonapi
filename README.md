@@ -3,14 +3,41 @@
 
 Tools for using JSON:API with dry-rb and Rails
 
+## CS::JSONAPI::Deserializer
+Converts JSON:API structure to a flat `Hash` of attributes that can be passed for example to ActiveRecord.
+
+```ruby
+require "cs/jsonapi"
+
+jsonapi_data = {
+  data: {
+    type: "digits",
+    attributes: {
+      digit: 1
+    },
+    relationships: {
+      account: {
+        data: {
+          type: "accounts",
+          id: "13e6059c-cf43-4486-a849-6dae13243363"
+        }
+      }
+    }
+  }
+}
+attributes = CS::JSONAPI::Deserializer.new(jsonapi_data).call
+# {:digit=>1, :account_id=>"13e6059c-cf43-4486-a849-6dae13243363"}
+Digit.create(attributes)
+```
+
 ## CS::JSONAPI::Contract
 DSL on top of `dry-validation` for defining JSON:API validations.
 ```ruby
 require "cs/jsonapi"
 
-class MyContract < CS::JSONAPI::Contract
+class Digit < CS::JSONAPI::Contract
   jsonapi do
-    type(:resources)
+    type(:digits)
 
     attributes do
       # attribute definitions
@@ -32,7 +59,7 @@ end
 
 jsonapi_data = {
   data: {
-    type: "resources",
+    type: "digits",
     attributes: {
       digit: 1,
       unexpected: false
@@ -48,9 +75,9 @@ jsonapi_data = {
   }
 }
 
-p MyContract.new.call(jsonapi_data)
+p Digit.new.call(jsonapi_data)
 # :data => {
-#   :type => "resources",
+#   :type => "digits",
 #     :attributes => {
 #       :digit=>1
 #     },
