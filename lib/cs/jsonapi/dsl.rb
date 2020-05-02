@@ -24,8 +24,10 @@ module CS
       end
 
       def rule(keys, &block)
-        new_keys = { data: { attributes: keys } }
-        rules[new_keys] = block
+        new_keys = [{ data: { attributes: keys } }]
+        Dry::Validation::Rule.new(keys: new_keys, block: block).tap do |rule|
+          rules << rule
+        end
       end
 
       def type(type)
@@ -33,7 +35,7 @@ module CS
       end
 
       def rules
-        @rules ||= {}
+        @rules ||= []
       end
 
       def resource_type

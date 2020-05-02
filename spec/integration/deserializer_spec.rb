@@ -3,7 +3,7 @@
 require "cs/jsonapi"
 
 RSpec.describe CS::JSONAPI::Deserializer do
-  subject(:deserializer) { described_class.new(data) }
+  subject(:deserializer) { described_class.new }
   let(:data) do
     {
       data: {
@@ -24,7 +24,7 @@ RSpec.describe CS::JSONAPI::Deserializer do
   end
 
   it "deserializes JSON:API structure to a flat Hash" do
-    expect(deserializer.call).to eq(
+    expect(deserializer.call(data)).to eq(
       { account_id: "13e6059c-cf43-4486-a849-6dae13243363", digit: 1 }
     )
   end
