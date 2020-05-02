@@ -5,11 +5,7 @@ module CS
     class Deserializer
       attr_reader :data
 
-      def initialize(data)
-        @data = data
-      end
-
-      def call
+      def call(data)
         deserialize_resource(data[:data])
       end
 
