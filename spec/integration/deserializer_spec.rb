@@ -28,4 +28,10 @@ RSpec.describe CS::JSONAPI::Deserializer do
       { account_id: "13e6059c-cf43-4486-a849-6dae13243363", digit: 1 }
     )
   end
+
+  it "handles attribute whitelist" do
+    expect(deserializer.call(data, only: [:digit])).to eq(
+      { digit: 1 }
+    )
+  end
 end

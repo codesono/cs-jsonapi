@@ -3,10 +3,16 @@
 module CS
   module JSONAPI
     class Deserializer
-      attr_reader :data
+      attr_reader :data, :only
 
-      def call(data)
-        deserialize_resource(data[:data])
+      def call(data, only: nil)
+        attributes = deserialize_resource(data[:data])
+
+        if only.nil?
+          attributes
+        else
+          attributes.slice(*only)
+        end
       end
 
       private
