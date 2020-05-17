@@ -25,9 +25,9 @@ jsonapi_data = {
     }
   }
 }
-attributes = CS::JSONAPI::Deserializer.new(jsonapi_data).call
+attributes = CS::JSONAPI::Deserializer.new.call(jsonapi_data)
 # {:digit=>1, :account_id=>"13e6059c-cf43-4486-a849-6dae13243363"}
-filtered_attributes = CS::JSONAPI::Deserializer.new(jsonapi_data, only: [:digit]).call
+filtered_attributes = CS::JSONAPI::Deserializer.new.call(jsonapi_data, only: [:digit])
 # {:digit=>1}
 Digit.create(filtered_attributes)
 ```
