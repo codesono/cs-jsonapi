@@ -20,6 +20,7 @@ module CS
       def deserialize_resource(data)
         relationships = data[:relationships] || {}
         attributes = data[:attributes] || {}
+        inflector = Dry::Inflector.new
 
         associations = relationships.each_with_object({}) do |(key, value), hash|
           data = value[:data]
@@ -27,7 +28,7 @@ module CS
           if data.is_a? Hash
             hash["#{key}_id".to_sym] = value[:data][:id]
           elsif data.respond_to? :[]
-            hash["#{key}_ids".to_sym] = value[:data].map { |r| r[:id] }
+            hash["#{inflector.singularize(key)}_ids".to_sym] = value[:data].map { |r| r[:id] }
           else
             raise "Invalid relationships"
           end

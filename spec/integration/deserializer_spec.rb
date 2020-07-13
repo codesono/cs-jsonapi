@@ -37,7 +37,7 @@ RSpec.describe CS::JSONAPI::Deserializer do
 
   it "deserializes JSON:API structure to a flat Hash" do
     expect(deserializer.call(data)).to eq(
-      { account_id: "13e6059c-cf43-4486-a849-6dae13243363", digit: 1, tags_ids: %w[tag1 tag2] }
+      { account_id: "13e6059c-cf43-4486-a849-6dae13243363", digit: 1, tag_ids: %w[tag1 tag2] }
     )
   end
 
