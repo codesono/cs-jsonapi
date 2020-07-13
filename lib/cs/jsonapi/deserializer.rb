@@ -21,9 +21,16 @@ module CS
         relationships = data[:relationships] || {}
         attributes = data[:attributes] || {}
 
-        # TODO: handle multiple resources in association
         associations = relationships.each_with_object({}) do |(key, value), hash|
-          hash["#{key}_id".to_sym] = value[:data][:id]
+          data = value[:data]
+
+          if data.is_a? Hash
+            hash["#{key}_id".to_sym] = value[:data][:id]
+          elsif data.respond_to? :[]
+            hash["#{key}_ids".to_sym] = value[:data].map { |r| r[:id] }
+          else
+            raise "Invalid relationships"
+          end
         end
 
         attributes.merge(associations)
