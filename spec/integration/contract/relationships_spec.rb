@@ -166,4 +166,60 @@ RSpec.describe CS::JSONAPI::Contract do
       end
     end.to raise_error ArgumentError, "duplicate relationship"
   end
+
+  context "array relationships" do
+    let(:test_class) do
+      Class.new(CS::JSONAPI::Contract) do
+        jsonapi do
+          type(:resources)
+          relationships do
+            required(:tests, :tests, is_array: true)
+          end
+        end
+      end
+    end
+
+    it "allows for array type relationship" do
+      input = {
+        data: {
+          type: "resources",
+          relationships: {
+            tests: {
+              data: [
+                { type: "tests", id: "test-1d" },
+                { type: "tests", id: "test-2d" }
+              ]
+            }
+          }
+        }
+      }
+
+      result = contract.call(input)
+
+      expect(result).to be_success
+    end
+
+    it "fails when relationship type is invalid" do
+      input = {
+        data: {
+          type: "resources",
+          relationships: {
+            tests: {
+              data: [
+                { type: "not-tests", id: "test-1d" },
+                { type: "tests", id: "test-2d" }
+              ]
+            }
+          }
+        }
+      }
+
+      result = contract.call(input)
+
+      expect(result).not_to be_success
+      expect(result.errors.to_h).to eq(
+        { data: { relationships: { tests: { data: { 0 => { type: ["is invalid"] } } } } } }
+      )
+    end
+  end
 end
